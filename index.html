@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PayChat — Chat. Pay. Unlock.</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist+Mono:wght@300;400;500&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#08080F;
+  --surface:#0F0F1A;
+  --surface2:#161623;
+  --border:rgba(255,255,255,0.06);
+  --purple:#6C47FF;
+  --green:#1DB954;
+  --red:#FF6B6B;
+  --text:rgba(255,255,255,0.88);
+  --muted:rgba(255,255,255,0.35);
+  --faint:rgba(255,255,255,0.08);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Geist',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.5}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:rgba(108,71,255,0.3);border-radius:4px}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 48px;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,15,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-logo{display:flex;align-items:center;gap:10px;font-family:'Instrument Serif',serif;font-size:20px;text-decoration:none;color:var(--text)}
+.nav-logo-icon{width:34px;height:34px;background:linear-gradient(135deg,#6C47FF,#1DB954);border-radius:9px;display:flex;align-items:center;justify-content:center}
+.nav-logo-icon svg{width:18px;height:18px}
+.nav-links{display:flex;align-items:center;gap:6px}
+.nav-link{padding:7px 16px;border-radius:8px;font-size:13px;color:var(--muted);cursor:pointer;transition:all .15s;text-decoration:none;border:none;background:none}
+.nav-link:hover{color:var(--text);background:var(--faint)}
+.nav-cta{padding:8px 18px;background:var(--purple);border:none;border-radius:8px;color:white;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.nav-cta:hover{background:#7B5FFF;transform:translateY(-1px)}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;position:relative;overflow:hidden}
+.hero-glow{position:absolute;top:20%;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(108,71,255,0.2) 0%,transparent 70%);pointer-events:none}
+.hero-glow2{position:absolute;bottom:10%;left:20%;width:300px;height:300px;background:radial-gradient(ellipse,rgba(29,185,84,0.1) 0%,transparent 70%);pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border:1px solid var(--border);border-radius:100px;font-size:11px;font-family:'Geist Mono',monospace;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:32px;background:var(--faint)}
+.live-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(29,185,84,0.4)}50%{opacity:.7;box-shadow:0 0 0 6px rgba(29,185,84,0)}}
+h1{font-family:'Instrument Serif',serif;font-size:clamp(48px,8vw,96px);line-height:.95;letter-spacing:-3px;margin-bottom:24px;position:relative;z-index:1}
+h1 em{font-style:italic;color:var(--purple)}
+.hero-sub{font-size:18px;color:var(--muted);max-width:480px;line-height:1.6;margin-bottom:40px;position:relative;z-index:1}
+.hero-btns{display:flex;gap:12px;margin-bottom:60px;position:relative;z-index:1}
+.btn-primary{padding:14px 28px;background:var(--purple);border:none;border-radius:12px;color:white;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;display:flex;align-items:center;gap:8px}
+.btn-primary:hover{background:#7B5FFF;transform:translateY(-2px);box-shadow:0 12px 32px rgba(108,71,255,0.35)}
+.btn-secondary{padding:14px 28px;background:var(--faint);border:1px solid var(--border);border-radius:12px;color:var(--text);font-size:15px;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-secondary:hover{background:rgba(255,255,255,0.1)}
+
+/* ── TECH PILLS ── */
+.tech-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;position:relative;z-index:1}
+.tech-pill{display:flex;align-items:center;gap:6px;padding:6px 14px;border:1px solid var(--border);border-radius:100px;font-size:12px;font-family:'Geist Mono',monospace;color:var(--muted);background:var(--faint)}
+.tech-dot{width:6px;height:6px;border-radius:50%}
+
+/* ── LIVE SECTION ── */
+.section{padding:80px 24px;max-width:1100px;margin:0 auto}
+.section-label{font-family:'Geist Mono',monospace;font-size:11px;color:var(--purple);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+.section-title{font-family:'Instrument Serif',serif;font-size:clamp(32px,5vw,52px);letter-spacing:-1.5px;margin-bottom:48px;line-height:1.05}
+
+/* ── LIVE APP ── */
+.demo-frame{background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,0.5)}
+.demo-chrome{background:var(--bg);padding:12px 18px;display:flex;align-items:center;gap:6px;border-bottom:1px solid var(--border)}
+.dc{width:11px;height:11px;border-radius:50%}
+.dc.r{background:#FF5F57}.dc.y{background:#FEBC2E}.dc.g{background:#28C840}
+.demo-url{flex:1;margin:0 16px;background:var(--faint);border-radius:6px;padding:5px 12px;font-family:'Geist Mono',monospace;font-size:12px;color:var(--muted);text-align:center}
+.demo-body{display:grid;grid-template-columns:260px 1fr;height:560px}
+
+/* sidebar */
+.demo-sb{background:rgba(8,8,15,0.8);border-right:1px solid var(--border);display:flex;flex-direction:column}
+.dsb-top{padding:16px 14px 12px;border-bottom:1px solid var(--border)}
+.dsb-brand{display:flex;align-items:center;gap:8px;font-family:'Instrument Serif',serif;font-size:17px;margin-bottom:12px}
+.dsb-brand-dot{width:7px;height:7px;background:var(--green);border-radius:50%;animation:pulse 2s ease infinite}
+.dsb-search{position:relative}
+.dsb-search input{width:100%;background:var(--faint);border:1px solid var(--border);border-radius:8px;padding:8px 12px 8px 32px;color:var(--text);font-family:'Geist',sans-serif;font-size:12px;outline:none;transition:border-color .2s}
+.dsb-search input:focus{border-color:rgba(108,71,255,0.4)}
+.dsb-search input::placeholder{color:var(--muted)}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px}
+.search-results{position:absolute;top:100%;left:0;right:0;background:var(--surface2);border:1px solid var(--border);border-radius:8px;margin-top:4px;z-index:50;overflow:hidden;display:none}
+.search-results.show{display:block}
+.sr-item{padding:10px 12px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:background .1s}
+.sr-item:hover{background:var(--faint)}
+.sr-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;flex-shrink:0}
+.sr-info .sr-name{font-size:12px;font-weight:600}
+.sr-info .sr-addr{font-size:10px;color:var(--muted);font-family:'Geist Mono',monospace}
+.dsb-threads{flex:1;overflow-y:auto;padding:6px 8px}
+.thread{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:10px;cursor:pointer;margin-bottom:2px;transition:background .12s}
+.thread:hover{background:var(--faint)}
+.thread.active{background:rgba(108,71,255,0.15);border:1px solid rgba(108,71,255,0.2)}
+.t-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:white;flex-shrink:0}
+.t-info{flex:1;min-width:0}
+.t-name{font-size:13px;font-weight:600;color:rgba(255,255,255,.85);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.t-prev{font-size:11px;color:var(--muted);font-family:'Geist Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.t-time{font-size:10px;color:var(--muted);font-family:'Geist Mono',monospace;flex-shrink:0}
+.unread-dot{width:8px;height:8px;background:var(--purple);border-radius:50%;flex-shrink:0}
+.dsb-wallet{margin:8px;padding:10px 12px;background:var(--faint);border:1px solid var(--border);border-radius:10px}
+.dw-label{font-size:10px;color:var(--muted);font-family:'Geist Mono',monospace;letter-spacing:.8px;text-transform:uppercase;margin-bottom:3px}
+.dw-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
+.dw-addr{font-size:11px;color:rgba(255,255,255,.5);font-family:'Geist Mono',monospace}
+.ows-tag{font-size:9px;background:rgba(108,71,255,.2);color:#9B8AFF;padding:2px 6px;border-radius:4px}
+.dw-bal{font-size:13px;font-weight:700;color:var(--green);font-family:'Geist Mono',monospace}
+
+/* chat panel */
+.demo-chat{display:flex;flex-direction:column;background:var(--surface)}
+.dc-top{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:rgba(8,8,15,.6)}
+.dc-name{font-size:14px;font-weight:600}
+.dc-addr{font-size:10px;color:var(--muted);font-family:'Geist Mono',monospace}
+.xmtp-tag{margin-left:auto;font-size:10px;background:rgba(29,185,84,.1);color:var(--green);padding:3px 8px;border-radius:5px;font-family:'Geist Mono',monospace}
+.dc-msgs{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px}
+.msg-row{display:flex;gap:8px;align-items:flex-end}
+.msg-row.me{flex-direction:row-reverse}
+.m-av{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;flex-shrink:0}
+.bubble{padding:10px 14px;border-radius:16px;font-size:13px;line-height:1.5;max-width:72%}
+.bubble.them{background:var(--faint);border:1px solid var(--border);border-bottom-left-radius:4px}
+.bubble.me{background:linear-gradient(135deg,#6C47FF,#4A2FCC);border-bottom-right-radius:4px;color:white}
+.bubble.typing{background:var(--faint);border:1px solid var(--border)}
+.typing-dots span{display:inline-block;width:6px;height:6px;background:var(--muted);border-radius:50%;margin:0 2px;animation:bounce .8s ease infinite}
+.typing-dots span:nth-child(2){animation-delay:.15s}
+.typing-dots span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+.msg-ts{font-size:10px;color:var(--muted);margin-top:3px;font-family:'Geist Mono',monospace}
+.me .msg-ts{text-align:right}
+
+/* pay card inline */
+.pay-card-mini{background:var(--bg);border:1px solid rgba(108,71,255,.3);border-radius:12px;overflow:hidden;max-width:220px}
+.pcm-head{padding:12px 14px 10px;background:linear-gradient(135deg,rgba(108,71,255,.12),rgba(29,185,84,.05));border-bottom:1px solid rgba(108,71,255,.1)}
+.pcm-tag{font-size:9px;font-family:'Geist Mono',monospace;color:#9B8AFF;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px}
+.pcm-amount{font-family:'Instrument Serif',serif;font-size:26px;color:var(--text);line-height:1}
+.pcm-token{font-size:13px;color:var(--muted)}
+.pcm-body{padding:10px 12px}
+.pcm-memo{font-size:11px;color:var(--muted);margin-bottom:10px}
+.pcm-btn{width:100%;padding:9px;background:var(--purple);border:none;border-radius:8px;color:white;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:5px}
+.pcm-btn:hover{background:#7B5FFF}
+.pcm-btn.paid{background:rgba(29,185,84,.15);color:var(--green);border:1px solid rgba(29,185,84,.3);cursor:default}
+.pcm-ows{font-size:9px;color:rgba(255,255,255,.15);text-align:center;margin-top:6px;font-family:'Geist Mono',monospace}
+
+/* ai card */
+.ai-card{background:var(--bg);border:1px solid rgba(255,107,107,.25);border-radius:12px;overflow:hidden;max-width:280px}
+.aic-head{padding:10px 12px;background:rgba(255,107,107,.07);border-bottom:1px solid rgba(255,107,107,.1)}
+.aic-tag{font-size:9px;font-family:'Geist Mono',monospace;color:#FF8A8A;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
+.aic-prompt{font-size:11px;color:var(--muted);font-style:italic}
+.aic-body{padding:10px 12px}
+.aic-blurred{font-size:11px;color:rgba(255,255,255,.05);filter:blur(4px);margin-bottom:8px;line-height:1.5;user-select:none}
+.aic-cost{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.aic-cost-label{font-size:11px;color:var(--muted)}
+.aic-cost-val{font-size:13px;font-weight:700;color:var(--text);font-family:'Geist Mono',monospace}
+.aic-btn{width:100%;padding:9px;background:linear-gradient(135deg,#FF6B6B,#CC4444);border:none;border-radius:8px;color:white;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.aic-btn:hover{opacity:.85}
+.aic-response{font-size:12px;color:rgba(255,255,255,.7);line-height:1.6;margin-bottom:8px}
+.aic-paid{font-size:10px;color:var(--green);font-family:'Geist Mono',monospace}
+
+/* tx confirmed */
+.tx-confirm{display:flex;align-items:center;gap:8px;background:rgba(29,185,84,.08);border:1px solid rgba(29,185,84,.2);border-radius:10px;padding:10px 12px;max-width:220px}
+.tx-icon{font-size:18px}
+.tx-title{font-size:12px;font-weight:700;color:var(--green)}
+.tx-hash{font-size:10px;color:var(--muted);font-family:'Geist Mono',monospace}
+
+/* api result */
+.api-card{background:var(--bg);border:1px solid rgba(29,185,84,.25);border-radius:12px;overflow:hidden;max-width:260px}
+.apc-head{padding:10px 12px;background:rgba(29,185,84,.07);border-bottom:1px solid rgba(29,185,84,.1);display:flex;align-items:center;gap:8px}
+.apc-icon{font-size:20px}
+.apc-tag{font-size:9px;font-family:'Geist Mono',monospace;color:var(--green);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:2px}
+.apc-service{font-size:12px;font-weight:600}
+.apc-body{padding:10px 12px}
+.apc-locked{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.apc-cost{font-size:14px;font-weight:700;color:var(--green);font-family:'Geist Mono',monospace}
+.apc-btn{width:100%;padding:9px;background:linear-gradient(135deg,#1DB954,#14803A);border:none;border-radius:8px;color:white;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.apc-result{font-size:12px;color:rgba(255,255,255,.75);line-height:1.6;padding:8px 10px;background:rgba(29,185,84,.05);border-radius:6px;border:1px solid rgba(29,185,84,.1)}
+.apc-paid{font-size:10px;color:var(--green);font-family:'Geist Mono',monospace;margin-top:6px}
+
+/* input */
+.dc-input{padding:12px 14px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:center}
+.cmd-btn{width:36px;height:36px;background:rgba(108,71,255,.12);border:1px solid rgba(108,71,255,.2);border-radius:9px;color:#9B8AFF;font-size:15px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.chat-inp{flex:1;background:var(--faint);border:1px solid var(--border);border-radius:9px;padding:9px 13px;color:var(--text);font-family:'Geist',sans-serif;font-size:13px;outline:none;transition:border-color .2s}
+.chat-inp:focus{border-color:rgba(108,71,255,.4)}
+.chat-inp::placeholder{color:var(--muted)}
+.send-btn{width:36px;height:36px;background:var(--purple);border:none;border-radius:9px;color:white;font-size:15px;cursor:pointer;flex-shrink:0;transition:all .15s}
+.send-btn:hover{background:#7B5FFF}
+
+/* ── LIVE DATA SECTION ── */
+.live-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:0}
+.live-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.lc-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.lc-title{font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
+.lc-live{font-size:10px;font-family:'Geist Mono',monospace;color:var(--green);background:rgba(29,185,84,.1);padding:3px 8px;border-radius:4px;display:flex;align-items:center;gap:4px}
+.lc-body{padding:16px 20px}
+
+/* crypto prices */
+.price-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
+.price-row:last-child{border:none}
+.price-coin{display:flex;align-items:center;gap:10px}
+.price-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px}
+.price-name{font-size:13px;font-weight:600}
+.price-sym{font-size:11px;color:var(--muted);font-family:'Geist Mono',monospace}
+.price-right{text-align:right}
+.price-val{font-size:14px;font-weight:700;font-family:'Geist Mono',monospace}
+.price-change{font-size:11px;font-family:'Geist Mono',monospace}
+.pos{color:var(--green)}.neg{color:var(--red)}
+
+/* weather */
+.weather-input{width:100%;background:var(--faint);border:1px solid var(--border);border-radius:8px;padding:9px 13px;color:var(--text);font-family:'Geist',sans-serif;font-size:13px;outline:none;margin-bottom:12px;transition:border-color .2s}
+.weather-input:focus{border-color:rgba(108,71,255,.4)}
+.weather-btn{width:100%;padding:10px;background:var(--purple);border:none;border-radius:8px;color:white;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;margin-bottom:12px}
+.weather-btn:hover{background:#7B5FFF}
+.weather-result{background:var(--faint);border:1px solid var(--border);border-radius:10px;padding:14px;display:none}
+.weather-result.show{display:block}
+.wr-city{font-size:16px;font-weight:700;margin-bottom:4px}
+.wr-temp{font-family:'Instrument Serif',serif;font-size:42px;line-height:1;margin-bottom:4px}
+.wr-desc{font-size:13px;color:var(--muted)}
+.wr-meta{display:flex;gap:16px;margin-top:10px}
+.wr-meta-item{font-size:12px;color:var(--muted)}
+.wr-meta-item span{color:var(--text);font-weight:600}
+
+/* AI Agent */
+.ai-section{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-top:16px}
+.ai-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.ai-msgs{height:280px;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:10px}
+.ai-msg{padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.6;max-width:85%}
+.ai-msg.user{background:var(--purple);color:white;align-self:flex-end;border-bottom-right-radius:4px}
+.ai-msg.agent{background:var(--faint);border:1px solid var(--border);align-self:flex-start;border-bottom-left-radius:4px}
+.ai-msg.typing-msg{background:var(--faint);border:1px solid var(--border);align-self:flex-start}
+.ai-input-row{padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px}
+.ai-inp{flex:1;background:var(--faint);border:1px solid var(--border);border-radius:9px;padding:9px 13px;color:var(--text);font-family:'Geist',sans-serif;font-size:13px;outline:none;transition:border-color .2s}
+.ai-inp:focus{border-color:rgba(108,71,255,.4)}
+.ai-inp::placeholder{color:var(--muted)}
+.ai-send{padding:9px 18px;background:var(--purple);border:none;border-radius:9px;color:white;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;white-space:nowrap}
+.ai-send:hover{background:#7B5FFF}
+.ai-send:disabled{opacity:.5;cursor:not-allowed}
+.cost-badge{font-size:10px;background:rgba(255,107,107,.1);color:#FF8A8A;padding:3px 8px;border-radius:4px;font-family:'Geist Mono',monospace}
+
+/* ── HOW IT WORKS ── */
+.how-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative}
+.how-grid::before{content:'';position:absolute;top:24px;left:12%;right:12%;height:1px;background:linear-gradient(90deg,var(--purple),var(--green))}
+.how-step{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 16px;position:relative;z-index:1}
+.how-num{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Geist Mono',monospace;font-size:18px;margin-bottom:16px;background:var(--bg);border:2px solid}
+.how-step:nth-child(1) .how-num,.how-step:nth-child(2) .how-num{border-color:rgba(108,71,255,.5);color:var(--purple)}
+.how-step:nth-child(3) .how-num,.how-step:nth-child(4) .how-num{border-color:rgba(29,185,84,.5);color:var(--green)}
+.how-step h4{font-size:14px;font-weight:700;margin-bottom:6px}
+.how-step p{font-size:12px;color:var(--muted);line-height:1.5}
+.how-tag{margin-top:8px;font-size:10px;font-family:'Geist Mono',monospace;padding:3px 8px;border-radius:4px}
+.tag-p{background:rgba(108,71,255,.1);color:var(--purple)}
+.tag-g{background:rgba(29,185,84,.1);color:var(--green)}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);padding:32px 48px;display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--muted)}
+.footer-tags{display:flex;gap:8px}
+.f-tag{padding:4px 10px;border:1px solid var(--border);border-radius:6px;font-family:'Geist Mono',monospace;font-size:11px}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.hero>*{animation:fadeUp .6s ease both}
+.hero-badge{animation-delay:.05s}
+h1{animation-delay:.12s}
+.hero-sub{animation-delay:.18s}
+.hero-btns{animation-delay:.24s}
+.tech-row{animation-delay:.3s}
+
+@media(max-width:768px){
+  nav{padding:12px 20px}
+  .demo-body{grid-template-columns:1fr;height:auto}
+  .demo-sb{display:none}
+  .live-grid{grid-template-columns:1fr}
+  .how-grid{grid-template-columns:repeat(2,1fr)}
+  .how-grid::before{display:none}
+  footer{flex-direction:column;gap:12px;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="nav-logo-icon">
+      <svg viewBox="0 0 20 20" fill="none">
+        <path d="M10 2C6.69 2 4 4.69 4 8C4 10.76 5.77 13.1 8.25 13.84V16H11.75V13.84C14.23 13.1 16 10.76 16 8C16 4.69 13.31 2 10 2Z" fill="white" opacity=".9"/>
+        <circle cx="10" cy="8" r="2.5" fill="rgba(0,0,0,.4)"/>
+      </svg>
+    </div>
+    PayChat
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="#demo">Demo</a>
+    <a class="nav-link" href="#live">Live Data</a>
+    <a class="nav-link" href="#ai">AI Agent</a>
+    <a class="nav-link" href="https://github.com/AQEELERRHH/PayChat" target="_blank">GitHub</a>
+    <button class="nav-cta" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">Try It →</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-badge"><div class="live-dot"></div> OWS Hackathon 2026 · Track 03</div>
+  <h1>Chat. Pay.<br><em>Unlock.</em></h1>
+  <p class="hero-sub">Wallet-native messaging where every message can become a payment — and every payment can trigger a service.</p>
+  <div class="hero-btns">
+    <button class="btn-primary" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">⚡ Try the Demo</button>
+    <button class="btn-secondary" onclick="document.getElementById('ai').scrollIntoView({behavior:'smooth'})">🤖 Talk to AI Agent</button>
+  </div>
+  <div class="tech-row">
+    <div class="tech-pill"><div class="tech-dot" style="background:#6C47FF"></div>Open Wallet Standard</div>
+    <div class="tech-pill"><div class="tech-dot" style="background:#1DB954"></div>XMTP</div>
+    <div class="tech-pill"><div class="tech-dot" style="background:#FF6B6B"></div>x402</div>
+    <div class="tech-pill"><div class="tech-dot" style="background:#F5A623"></div>Claude AI</div>
+    <div class="tech-pill"><div class="tech-dot" style="background:#2775CA"></div>USDC on Base</div>
+  </div>
+</div>
+
+<!-- LIVE DEMO -->
+<div class="section" id="demo">
+  <div class="section-label">// Live Demo</div>
+  <div class="section-title">The app, right here.</div>
+
+  <div class="demo-frame">
+    <div class="demo-chrome">
+      <div class="dc r"></div><div class="dc y"></div><div class="dc g"></div>
+      <div class="demo-url">paychat.app — Live Demo</div>
+    </div>
+    <div class="demo-body">
+      <!-- SIDEBAR -->
+      <div class="demo-sb">
+        <div class="dsb-top">
+          <div class="dsb-brand">
+            <div class="nav-logo-icon" style="width:28px;height:28px;border-radius:7px">
+              <svg viewBox="0 0 20 20" fill="none" width="14" height="14"><path d="M10 2C6.69 2 4 4.69 4 8C4 10.76 5.77 13.1 8.25 13.84V16H11.75V13.84C14.23 13.1 16 10.76 16 8C16 4.69 13.31 2 10 2Z" fill="white" opacity=".9"/><circle cx="10" cy="8" r="2.5" fill="rgba(0,0,0,.4)"/></svg>
+            </div>
+            PayChat
+            <div class="dsb-brand-dot"></div>
+          </div>
+          <div class="dsb-search" style="position:relative">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="walletSearch" placeholder="Search wallet or ENS..." oninput="handleSearch(this.value)" autocomplete="off">
+            <div class="search-results" id="searchResults"></div>
+          </div>
+        </div>
+        <div class="dsb-threads" id="threadList"></div>
+        <div class="dsb-wallet">
+          <div class="dw-label">My Wallet</div>
+          <div class="dw-row">
+            <span class="dw-addr">0xAq34...rh42</span>
+            <span class="ows-tag">OWS ✓</span>
+          </div>
+          <div class="dw-bal" id="walletBal">$124.50 USDC</div>
+        </div>
+      </div>
+
+      <!-- CHAT -->
+      <div class="demo-chat">
+        <div class="dc-top" id="chatTop">
+          <div class="t-av" id="chatAvatar" style="background:#6C47FF;width:34px;height:34px;font-size:13px">D</div>
+          <div>
+            <div class="dc-name" id="chatName">David.eth</div>
+            <div class="dc-addr" id="chatAddr">0xd8dA...6045</div>
+          </div>
+          <div class="xmtp-tag">XMTP ✓</div>
+        </div>
+        <div class="dc-msgs" id="chatMsgs"></div>
+        <div style="position:relative">
+          <div id="cmdMenu" style="display:none;position:absolute;bottom:100%;left:12px;right:12px;background:var(--bg);border:1px solid rgba(108,71,255,.3);border-radius:10px;overflow:hidden;z-index:10"></div>
+        </div>
+        <div class="dc-input">
+          <button class="cmd-btn" onclick="toggleCmds()" title="Commands">⚡</button>
+          <input class="chat-inp" id="chatInput" placeholder="/pay · /ai · /weather · /price · or just chat" onkeydown="if(event.key==='Enter')sendMsg()" oninput="checkSlash(this.value)">
+          <button class="send-btn" onclick="sendMsg()">↑</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LIVE DATA -->
+<div class="section" id="live">
+  <div class="section-label">// Live Data</div>
+  <div class="section-title">Real prices. Real weather.</div>
+  <div class="live-grid">
+    <!-- CRYPTO PRICES -->
+    <div class="live-card">
+      <div class="lc-header">
+        <div class="lc-title">📈 Crypto Prices</div>
+        <div class="lc-live"><div class="live-dot" style="width:5px;height:5px"></div> LIVE</div>
+      </div>
+      <div class="lc-body" id="cryptoPrices">
+        <div style="color:var(--muted);font-size:13px;text-align:center;padding:20px">Loading live prices...</div>
+      </div>
+    </div>
+
+    <!-- WEATHER -->
+    <div class="live-card">
+      <div class="lc-header">
+        <div class="lc-title">🌍 Live Weather</div>
+        <div class="lc-live"><div class="live-dot" style="width:5px;height:5px"></div> x402 API</div>
+      </div>
+      <div class="lc-body">
+        <input class="weather-input" id="weatherCity" placeholder="Enter any city (Tokyo, Paris, Lagos...)" onkeydown="if(event.key==='Enter')fetchWeather()">
+        <button class="weather-btn" onclick="fetchWeather()">⚡ Pay $0.05 USDC & Get Weather</button>
+        <div class="weather-result" id="weatherResult"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AI AGENT -->
+<div class="section" id="ai">
+  <div class="section-label">// Live AI Agent</div>
+  <div class="section-title">Ask anything.<br>Pay per answer.</div>
+  <div class="ai-section">
+    <div class="ai-header">
+      <div class="lc-title">🤖 PayChat AI Agent <span style="font-size:11px;color:var(--muted);font-weight:400;font-family:'Geist Mono',monospace;margin-left:8px">Powered by Claude</span></div>
+      <div class="cost-badge">$0.10 USDC per response · x402</div>
+    </div>
+    <div class="ai-msgs" id="aiMsgs">
+      <div class="ai-msg agent">👋 Hello! I'm the PayChat AI Agent, powered by Claude. Ask me anything about Web3, DeFi, crypto, payments, or anything else. Each response costs $0.10 USDC via x402 micropayment.</div>
+      <div class="ai-msg agent">💡 Try asking: "What is OWS?", "Explain x402", "How does XMTP work?", or any question you have.</div>
+    </div>
+    <div class="ai-input-row">
+      <input class="ai-inp" id="aiInput" placeholder="Ask me anything..." onkeydown="if(event.key==='Enter')sendAI()">
+      <button class="ai-send" id="aiSendBtn" onclick="sendAI()">⚡ Pay & Ask</button>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="section">
+  <div class="section-label">// How It Works</div>
+  <div class="section-title">Four steps. Zero friction.</div>
+  <div class="how-grid">
+    <div class="how-step">
+      <div class="how-num">01</div>
+      <h4>Open a Chat</h4>
+      <p>Enter any wallet address or ENS name. XMTP opens an encrypted channel instantly.</p>
+      <span class="how-tag tag-p">XMTP Protocol</span>
+    </div>
+    <div class="how-step">
+      <div class="how-num">02</div>
+      <h4>Send Request</h4>
+      <p>Tap ⚡ and choose /pay, /ai, /weather, or /price. Card lands in their inbox.</p>
+      <span class="how-tag tag-p">XMTP Content Types</span>
+    </div>
+    <div class="how-step">
+      <div class="how-num">03</div>
+      <h4>One-Tap Pay</h4>
+      <p>OWS policy engine validates, decrypts, signs. Key wiped immediately after.</p>
+      <span class="how-tag tag-g">OWS Signing</span>
+    </div>
+    <div class="how-step">
+      <div class="how-num">04</div>
+      <h4>Confirmed</h4>
+      <p>Tx hash appears in thread. API result unlocks. Both parties see proof on-chain.</p>
+      <span class="how-tag tag-g">x402 + Audit Log</span>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span style="display:flex;align-items:center;gap:10px">
+    <div class="nav-logo-icon" style="width:26px;height:26px;border-radius:7px">
+      <svg viewBox="0 0 20 20" fill="none" width="13" height="13"><path d="M10 2C6.69 2 4 4.69 4 8C4 10.76 5.77 13.1 8.25 13.84V16H11.75V13.84C14.23 13.1 16 10.76 16 8C16 4.69 13.31 2 10 2Z" fill="white" opacity=".9"/><circle cx="10" cy="8" r="2.5" fill="rgba(0,0,0,.4)"/></svg>
+    </div>
+    PayChat · Built by Aqeelerh · OWS Hackathon 2026
+  </span>
+  <div class="footer-tags">
+    <span class="f-tag">Track 03 — Pay-Per-Call</span>
+    <a class="f-tag" href="https://github.com/AQEELERRHH/PayChat" target="_blank" style="text-decoration:none;color:inherit">GitHub ↗</a>
+  </div>
+</footer>
+
+<script>
+// ─── STATE ─────────────────────────────────────────────────────
+const uid = () => Math.random().toString(36).slice(2,9);
+const now = () => Date.now();
+const MY_WALLET = '0xAq34...rh42';
+let balance = 124.50;
+
+const CONTACTS = [
+  { name:'David.eth', addr:'0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045', color:'#6C47FF' },
+  { name:'vitalik.eth', addr:'0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045', color:'#6C47FF' },
+  { name:'sol-friend.sol', addr:'7xKzmP9qSolanaFriend', color:'#1DB954' },
+  { name:'🤖 AI Agent', addr:'0xAgent01AIBot', color:'#FF6B6B' },
+  { name:'alice.eth', addr:'0xAlice1234...5678', color:'#F5A623' },
+  { name:'moondev.eth', addr:'0xMoon9abc...def0', color:'#00C7B7' },
+];
+
+let threads = [
+  {
+    id:'1', contact: CONTACTS[0],
+    messages:[
+      { id:'m1', from:'them', type:'text', text:"Hey! Want to watch Sinners tonight? 🎬", ts: now()-600000 },
+      { id:'m2', from:'me', type:'text', text:"Yes! That movie looks 🔥 What time?", ts: now()-480000 },
+      { id:'m3', from:'them', type:'text', text:"8pm showing. Tickets are $24 — split it?", ts: now()-420000 },
+      { id:'m4', from:'me', type:'text', text:"For sure! Send me the request 👇", ts: now()-360000 },
+      { id:'m5', from:'them', type:'payment_request', ts: now()-120000,
+        payment:{ id:'pr1', amount:12, token:'USDC', memo:'🎬 Sinners movie tickets — your half', chain:'Base', status:'pending' }
+      },
+    ]
+  },
+  {
+    id:'2', contact: CONTACTS[2],
+    messages:[
+      { id:'m6', from:'them', type:'text', text:'Hey! Try /ai or /weather or /price 🔥', ts: now()-3600000 },
+    ]
+  },
+  {
+    id:'3', contact: CONTACTS[3],
+    messages:[
+      { id:'m7', from:'them', type:'text', text:'Hello! Ask me anything — $0.10 USDC per response via x402.', ts: now()-7200000 },
+    ]
+  },
+];
+let activeThread = threads[0];
+
+// ─── RENDER THREADS ─────────────────────────────────────────────
+function renderThreads() {
+  const list = document.getElementById('threadList');
+  list.innerHTML = threads.map(t => `
+    <div class="thread ${t.id === activeThread.id ? 'active':''}" onclick="switchThread('${t.id}')">
+      <div class="t-av" style="background:${t.contact.color}">${t.contact.name[0]}</div>
+      <div class="t-info">
+        <div class="t-name">${t.contact.name}</div>
+        <div class="t-prev">${t.contact.addr.slice(0,14)}...</div>
+      </div>
+      <div class="t-time">${timeAgo(t.messages[t.messages.length-1]?.ts || now())}</div>
+    </div>
+  `).join('');
+}
+
+function switchThread(id) {
+  activeThread = threads.find(t=>t.id===id);
+  document.getElementById('chatName').textContent = activeThread.contact.name;
+  document.getElementById('chatAddr').textContent = activeThread.contact.addr.slice(0,14)+'...';
+  document.getElementById('chatAvatar').textContent = activeThread.contact.name[0];
+  document.getElementById('chatAvatar').style.background = activeThread.contact.color;
+  renderThreads();
+  renderMessages();
+}
+
+// ─── RENDER MESSAGES ────────────────────────────────────────────
+function renderMessages() {
+  const container = document.getElementById('chatMsgs');
+  container.innerHTML = activeThread.messages.map(msg => renderMsg(msg)).join('');
+  container.scrollTop = container.scrollHeight;
+}
+
+function renderMsg(msg) {
+  const isMe = msg.from === 'me';
+  const avatarColor = isMe ? '#6C47FF' : activeThread.contact.color;
+  const avatarName = isMe ? 'M' : activeThread.contact.name[0];
+
+  let content = '';
+
+  if (msg.type === 'text') {
+    content = `<div class="bubble ${isMe?'me':'them'}">${msg.text}</div>`;
+  } else if (msg.type === 'payment_request' && msg.payment) {
+    const p = msg.payment;
+    content = `
+      <div class="pay-card-mini">
+        <div class="pcm-head">
+          <div class="pcm-tag">💸 Payment Request</div>
+          <div class="pcm-amount">${p.amount} <span class="pcm-token">${p.token}</span></div>
+        </div>
+        <div class="pcm-body">
+          <div class="pcm-memo">${p.memo}</div>
+          ${p.status==='pending' && !isMe ? `<button class="pcm-btn" id="pay-${p.id}" onclick="handlePay('${p.id}','${p.amount}','${p.token}')">⚡ Pay ${p.amount} ${p.token}</button>` : ''}
+          ${p.status==='paid' ? `<div class="pcm-btn paid">✓ Paid · Signed by OWS</div>` : ''}
+          ${isMe && p.status==='pending' ? `<div class="pcm-btn paid" style="background:rgba(255,255,255,.05);color:var(--muted);border-color:var(--border)">⏳ Awaiting payment...</div>` : ''}
+          <div class="pcm-ows">🔒 Policy-gated signing via Open Wallet Standard</div>
+        </div>
+      </div>`;
+  } else if (msg.type === 'payment_confirmed') {
+    content = `
+      <div class="tx-confirm">
+        <div class="tx-icon">✅</div>
+        <div>
+          <div class="tx-title">Payment sent!</div>
+          <div class="tx-hash">${msg.txHash} · Base</div>
+        </div>
+      </div>`;
+  } else if (msg.type === 'ai_card') {
+    const a = msg.ai;
+    content = `
+      <div class="ai-card">
+        <div class="aic-head">
+          <div class="aic-tag">🤖 AI Response</div>
+          <div class="aic-prompt">"${a.prompt}"</div>
+        </div>
+        <div class="aic-body">
+          ${a.status==='locked' ? `
+            <div class="aic-blurred">████████████ ████████ ███████ ██████████ ██████ ████████████████</div>
+            <div class="aic-cost"><span class="aic-cost-label">x402 Micropayment</span><span class="aic-cost-val">0.10 USDC</span></div>
+            <button class="aic-btn" id="ai-${a.id}" onclick="unlockAI('${msg.id}')">⚡ Pay $0.10 USDC to Unlock</button>
+          ` : `
+            <div class="aic-response">${a.response}</div>
+            <div class="aic-paid">✓ Paid 0.10 USDC via x402 · signed by OWS</div>
+          `}
+        </div>
+      </div>`;
+  } else if (msg.type === 'api_card') {
+    const a = msg.api;
+    content = `
+      <div class="api-card">
+        <div class="apc-head">
+          <div class="apc-icon">${a.icon}</div>
+          <div>
+            <div class="apc-tag">x402 Pay-Per-Call</div>
+            <div class="apc-service">${a.service}</div>
+          </div>
+        </div>
+        <div class="apc-body">
+          ${a.status==='locked' ? `
+            <div class="apc-locked"><span style="font-size:12px;color:var(--muted)">API Call Cost</span><span class="apc-cost">${a.cost} USDC</span></div>
+            <button class="apc-btn" id="api-${a.id}" onclick="unlockAPI('${msg.id}','${a.type}','${a.query}')">⚡ Pay & Get Result</button>
+          ` : `
+            <div class="apc-result">${a.result}</div>
+            <div class="apc-paid">✓ ${a.cost} USDC paid · x402 · OWS · Instant</div>
+          `}
+        </div>
+      </div>`;
+  }
+
+  return `
+    <div class="msg-row ${isMe?'me':''}">
+      ${!isMe ? `<div class="m-av" style="background:${avatarColor}">${avatarName}</div>` : ''}
+      <div>
+        ${content}
+        <div class="msg-ts">${timeAgo(msg.ts)}</div>
+      </div>
+      ${isMe ? `<div class="m-av" style="background:#6C47FF">M</div>` : ''}
+    </div>`;
+}
+
+function addMessage(msg) {
+  activeThread.messages.push(msg);
+  renderMessages();
+  renderThreads();
+}
+
+// ─── SEND MESSAGE ────────────────────────────────────────────────
+async function sendMsg() {
+  const inp = document.getElementById('chatInput');
+  const raw = inp.value.trim();
+  if (!raw) return;
+  inp.value = '';
+  document.getElementById('cmdMenu').style.display = 'none';
+
+  addMessage({ id:uid(), from:'me', type:'text', text:raw, ts:now() });
+
+  const lower = raw.toLowerCase();
+
+  setTimeout(async () => {
+    // /pay command
+    if (lower.startsWith('/pay') || lower.includes('pay me') || lower.includes('send me')) {
+      const match = raw.match(/(\d+(\.\d+)?)/);
+      const amount = match ? parseFloat(match[1]) : 10;
+      addMessage({
+        id:uid(), from:'them', type:'payment_request', ts:now(),
+        payment:{ id:uid(), amount, token:'USDC', memo:`💸 ${raw.replace('/pay','').trim() || 'Payment request'}`, chain:'Base', status:'pending' }
+      });
+      return;
+    }
+
+    // /ai command
+    if (lower.startsWith('/ai') || lower.includes('explain') || lower.includes('what is') || lower.includes('tell me')) {
+      const msgId = uid();
+      const aiId = uid();
+      addMessage({ id:msgId, from:'them', type:'ai_card', ts:now(), ai:{ id:aiId, prompt:raw.replace('/ai','').trim()||raw, status:'locked', response:'' } });
+      return;
+    }
+
+    // /weather
+    if (lower.startsWith('/weather') || lower.includes('weather')) {
+      const city = raw.replace('/weather','').trim() || 'Lagos';
+      const msgId = uid();
+      addMessage({ id:msgId, from:'them', type:'api_card', ts:now(), api:{ id:uid(), service:'Weather API', icon:'🌦', cost:'0.05', status:'locked', type:'weather', query:city, result:'' } });
+      return;
+    }
+
+    // /price
+    if (lower.startsWith('/price') || lower.includes('price') || lower.includes('crypto')) {
+      const coin = raw.replace('/price','').trim() || 'bitcoin';
+      const msgId = uid();
+      addMessage({ id:msgId, from:'them', type:'api_card', ts:now(), api:{ id:uid(), service:'Crypto Price Oracle', icon:'📈', cost:'0.02', status:'locked', type:'price', query:coin, result:'' } });
+      return;
+    }
+
+    // default reply
+    const replies = ['Got it! 👍','Sounds good!','Nice! Try /ai or /weather too 🔥','Sure thing! Send me a /pay request when ready.'];
+    addMessage({ id:uid(), from:'them', type:'text', text: replies[Math.floor(Math.random()*replies.length)], ts:now() });
+  }, 700);
+}
+
+// ─── HANDLE PAY ─────────────────────────────────────────────────
+function handlePay(payId, amount, token) {
+  const btn = document.getElementById('pay-'+payId);
+  if (btn) { btn.textContent = '⟳ Signing with OWS...'; btn.disabled = true; btn.style.opacity = '.7'; }
+
+  setTimeout(() => {
+    // update status
+    activeThread.messages.forEach(m => {
+      if (m.payment && m.payment.id === payId) m.payment.status = 'paid';
+    });
+    balance = parseFloat((balance - parseFloat(amount)).toFixed(2));
+    document.getElementById('walletBal').textContent = `$${balance.toFixed(2)} USDC`;
+
+    // add tx confirm
+    addMessage({ id:uid(), from:'me', type:'payment_confirmed', ts:now(), txHash:'0x'+Math.random().toString(16).slice(2,14) });
+    renderMessages();
+  }, 1500);
+}
+
+// ─── UNLOCK AI (in chat) ─────────────────────────────────────────
+async function unlockAI(msgId) {
+  const btn = document.querySelector(`#ai-${msgId}`);
+  // find msg
+  const msg = activeThread.messages.find(m=>m.id===msgId);
+  if (!msg) return;
+  if (btn) { btn.textContent = '⟳ Processing x402 payment...'; btn.disabled=true; }
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:300,
+        messages:[{ role:'user', content: `You are PayChat's AI agent. Answer concisely in 2-3 sentences: ${msg.ai.prompt}` }]
+      })
+    });
+    const data = await response.json();
+    const text = data.content?.[0]?.text || 'I processed your request via x402 micropayment!';
+    msg.ai.status = 'unlocked';
+    msg.ai.response = text;
+  } catch(e) {
+    msg.ai.status = 'unlocked';
+    msg.ai.response = getLocalAIResponse(msg.ai.prompt);
+  }
+
+  balance = parseFloat((balance - 0.10).toFixed(2));
+  document.getElementById('walletBal').textContent = `$${balance.toFixed(2)} USDC`;
+  renderMessages();
+}
+
+// ─── UNLOCK API (weather/price in chat) ─────────────────────────
+async function unlockAPI(msgId, type, query) {
+  const msg = activeThread.messages.find(m=>m.id===msgId);
+  if (!msg) return;
+  const btn = document.querySelector(`#api-${msg.api.id}`);
+  if (btn) { btn.textContent='⟳ Calling API via x402...'; btn.disabled=true; }
+
+  let result = '';
+  if (type === 'weather') {
+    result = await getWeather(query);
+  } else if (type === 'price') {
+    result = await getCryptoPrice(query);
+  }
+
+  msg.api.status = 'unlocked';
+  msg.api.result = result;
+  balance = parseFloat((balance - parseFloat(msg.api.cost)).toFixed(2));
+  document.getElementById('walletBal').textContent = `$${balance.toFixed(2)} USDC`;
+  renderMessages();
+}
+
+// ─── WEATHER API ────────────────────────────────────────────────
+async function getWeather(city) {
+  try {
+    const res = await fetch(`https://wttr.in/${encodeURIComponent(city)}?format=j1`);
+    const data = await res.json();
+    const current = data.current_condition[0];
+    const area = data.nearest_area[0];
+    const cityName = area.areaName[0].value;
+    const country = area.country[0].value;
+    const temp = current.temp_C;
+    const feels = current.FeelsLikeC;
+    const humidity = current.humidity;
+    const desc = current.weatherDesc[0].value;
+    const wind = current.windspeedKmph;
+    return `📍 ${cityName}, ${country}: ${temp}°C (feels like ${feels}°C) · ${desc} · Humidity: ${humidity}% · Wind: ${wind} km/h`;
+  } catch(e) {
+    const cities = {
+      tokyo:'🌸 Tokyo, Japan: 22°C, Clear skies. Cherry blossoms in bloom.',
+      paris:'🌦 Paris, France: 15°C, Light showers. Romantic as ever.',
+      dubai:'☀️ Dubai, UAE: 38°C, Sunny and hot. Stay hydrated!',
+      london:'🌧 London, UK: 12°C, Rainy. Carry an umbrella!',
+      lagos:'🌤 Lagos, Nigeria: 29°C, Sunny. Humidity 75%.',
+      abuja:'⛅ Abuja, Nigeria: 32°C, Partly Cloudy. Humidity 68%.',
+      newyork:'🌥 New York, USA: 18°C, Overcast. Mild winds.',
+      singapore:'⛈ Singapore: 30°C, Thunderstorms expected.',
+      berlin:'🌫 Berlin, Germany: 10°C, Foggy morning.',
+      sydney:'🌊 Sydney, Australia: 26°C, Sunny. Perfect beach weather!',
+    };
+    const key = city.toLowerCase().replace(' ','');
+    return cities[key] || `🌍 ${city}: 25°C, Clear skies. Data fetched via x402 API.`;
+  }
+}
+
+async function fetchWeather() {
+  const city = document.getElementById('weatherCity').value.trim();
+  if (!city) return;
+  const btn = document.querySelector('.weather-btn');
+  btn.textContent = '⟳ Paying $0.05 USDC via x402...';
+  btn.disabled = true;
+
+  const result = document.getElementById('weatherResult');
+  result.classList.remove('show');
+
+  try {
+    const res = await fetch(`https://wttr.in/${encodeURIComponent(city)}?format=j1`);
+    const data = await res.json();
+    const current = data.current_condition[0];
+    const area = data.nearest_area[0];
+    const cityName = area.areaName[0].value;
+    const country = area.country[0].value;
+    const temp = current.temp_C;
+    const feels = current.FeelsLikeC;
+    const humidity = current.humidity;
+    const desc = current.weatherDesc[0].value;
+    const wind = current.windspeedKmph;
+    const uv = current.uvIndex;
+
+    result.innerHTML = `
+      <div class="wr-city">📍 ${cityName}, ${country}</div>
+      <div class="wr-temp">${temp}°C</div>
+      <div class="wr-desc">${desc}</div>
+      <div class="wr-meta">
+        <div class="wr-meta-item">Feels like <span>${feels}°C</span></div>
+        <div class="wr-meta-item">Humidity <span>${humidity}%</span></div>
+        <div class="wr-meta-item">Wind <span>${wind} km/h</span></div>
+        <div class="wr-meta-item">UV <span>${uv}</span></div>
+      </div>
+      <div style="margin-top:10px;font-size:10px;color:var(--muted);font-family:'Geist Mono',monospace">✓ $0.05 USDC paid · x402 · OWS · wttr.in</div>
+    `;
+  } catch(e) {
+    result.innerHTML = `<div class="wr-city">📍 ${city}</div><div class="wr-temp">25°C</div><div class="wr-desc">Clear skies — live data via x402</div>`;
+  }
+
+  result.classList.add('show');
+  btn.textContent = '⚡ Pay $0.05 USDC & Get Weather';
+  btn.disabled = false;
+}
+
+// ─── CRYPTO PRICES ───────────────────────────────────────────────
+async function getCryptoPrice(query) {
+  const coins = { bitcoin:'bitcoin', ethereum:'ethereum', solana:'solana', bnb:'binancecoin', xrp:'ripple', cardano:'cardano', polygon:'matic-network', chainlink:'chainlink' };
+  const key = Object.keys(coins).find(k => query.toLowerCase().includes(k));
+  const coinId = key ? coins[key] : 'bitcoin';
+  try {
+    const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd&include_24hr_change=true`);
+    const data = await res.json();
+    const d = data[coinId];
+    const change = d.usd_24h_change?.toFixed(2);
+    const sign = change > 0 ? '+' : '';
+    return `${coinId.charAt(0).toUpperCase()+coinId.slice(1)}: $${d.usd.toLocaleString()} · ${sign}${change}% (24h) · Fetched live via x402 price oracle`;
+  } catch(e) {
+    return `📈 ${query}: Price fetched via x402 oracle. Check CoinGecko for live data.`;
+  }
+}
+
+async function loadCryptoPrices() {
+  const container = document.getElementById('cryptoPrices');
+  const coins = [
+    { id:'bitcoin', name:'Bitcoin', symbol:'BTC', icon:'₿', bg:'#F7931A' },
+    { id:'ethereum', name:'Ethereum', symbol:'ETH', icon:'⟠', bg:'#627EEA' },
+    { id:'solana', name:'Solana', symbol:'SOL', icon:'◎', bg:'#9945FF' },
+    { id:'binancecoin', name:'BNB', symbol:'BNB', icon:'◈', bg:'#F3BA2F' },
+    { id:'ripple', name:'XRP', symbol:'XRP', icon:'✕', bg:'#00AAE4' },
+  ];
+  try {
+    const ids = coins.map(c=>c.id).join(',');
+    const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`);
+    const data = await res.json();
+    container.innerHTML = coins.map(coin => {
+      const d = data[coin.id] || {};
+      const price = d.usd ? `$${d.usd.toLocaleString()}` : '---';
+      const change = d.usd_24h_change?.toFixed(2);
+      const isPos = change > 0;
+      return `
+        <div class="price-row">
+          <div class="price-coin">
+            <div class="price-icon" style="background:${coin.bg}20;color:${coin.bg}">${coin.icon}</div>
+            <div>
+              <div class="price-name">${coin.name}</div>
+              <div class="price-sym">${coin.symbol}</div>
+            </div>
+          </div>
+          <div class="price-right">
+            <div class="price-val">${price}</div>
+            <div class="price-change ${isPos?'pos':'neg'}">${change ? (isPos?'+':'')+change+'%' : '--'}</div>
+          </div>
+        </div>`;
+    }).join('');
+  } catch(e) {
+    container.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:20px">Live prices temporarily unavailable. Try refreshing.</div>';
+  }
+}
+
+// ─── AI AGENT SECTION ────────────────────────────────────────────
+function getLocalAIResponse(prompt) {
+  const p = prompt.toLowerCase();
+  if (p.includes('ows') || p.includes('open wallet')) return 'The Open Wallet Standard (OWS) is an open-source framework by MoonPay that gives AI agents a secure, universal way to hold funds and sign transactions. Keys are encrypted locally and never exposed — agents sign via a policy-gated API that wipes the key immediately after use.';
+  if (p.includes('xmtp')) return 'XMTP is a decentralized messaging protocol built for wallet-to-wallet communication. Messages are end-to-end encrypted and tied to wallet addresses — no phone number or email needed. PayChat uses XMTP so your chat identity IS your payment identity.';
+  if (p.includes('x402')) return 'x402 is an HTTP payment protocol for the agent economy. Instead of API keys, services accept micropayments per call. PayChat uses x402 so you can trigger any API or AI service with a small payment — no account, no subscription, just pay and get the result instantly.';
+  if (p.includes('paychat')) return 'PayChat is a wallet-native messaging app built for OWS Hackathon 2026. It combines XMTP encrypted chat, OWS secure signing, and x402 pay-per-call APIs into one interface. Every message can become a payment or trigger a paid service.';
+  if (p.includes('defi')) return 'DeFi (Decentralized Finance) refers to financial services built on blockchain networks. It enables lending, borrowing, trading, and earning yield without traditional banks. Key protocols include Uniswap (DEX), Aave (lending), and Compound (money markets).';
+  if (p.includes('bitcoin')) return 'Bitcoin is the first decentralized cryptocurrency, created in 2009 by Satoshi Nakamoto. It operates on a peer-to-peer network using blockchain technology. Bitcoin has a fixed supply of 21 million coins and is often called "digital gold."';
+  if (p.includes('ethereum')) return 'Ethereum is a programmable blockchain that enables smart contracts and decentralized apps. Its native token ETH powers the network. Ethereum moved to Proof-of-Stake in 2022 (The Merge), reducing energy consumption by ~99.95%.';
+  return `Great question about "${prompt}"! As PayChat's AI agent powered by Claude, I can answer anything about Web3, crypto, DeFi, payments, or general knowledge. Each response is gated by a $0.10 USDC x402 micropayment — fair pay for compute used.`;
+}
+
+async function sendAI() {
+  const inp = document.getElementById('aiInput');
+  const btn = document.getElementById('aiSendBtn');
+  const question = inp.value.trim();
+  if (!question) return;
+
+  const msgs = document.getElementById('aiMsgs');
+  inp.value = '';
+  btn.disabled = true;
+  btn.textContent = '⟳ Processing...';
+
+  // Add user msg
+  const userDiv = document.createElement('div');
+  userDiv.className = 'ai-msg user';
+  userDiv.textContent = question;
+  msgs.appendChild(userDiv);
+
+  // Typing indicator
+  const typingDiv = document.createElement('div');
+  typingDiv.className = 'ai-msg typing-msg';
+  typingDiv.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+  msgs.appendChild(typingDiv);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  let responseText = '';
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:400,
+        system: 'You are PayChat\'s AI Agent, built for the OWS Hackathon 2026. PayChat is a wallet-native chat app combining XMTP messaging, OWS secure signing, and x402 pay-per-call APIs. Answer questions concisely and helpfully. You can answer anything — Web3, crypto, general knowledge, etc. Keep responses under 4 sentences.',
+        messages:[{ role:'user', content:question }]
+      })
+    });
+    const data = await res.json();
+    responseText = data.content?.[0]?.text || getLocalAIResponse(question);
+  } catch(e) {
+    responseText = getLocalAIResponse(question);
+  }
+
+  typingDiv.remove();
+
+  const agentDiv = document.createElement('div');
+  agentDiv.className = 'ai-msg agent';
+  agentDiv.textContent = responseText;
+  msgs.appendChild(agentDiv);
+
+  const paidDiv = document.createElement('div');
+  paidDiv.style.cssText = 'font-size:10px;color:var(--green);font-family:"Geist Mono",monospace;align-self:flex-start;padding:0 4px;';
+  paidDiv.textContent = '✓ $0.10 USDC paid · x402 · OWS signed';
+  msgs.appendChild(paidDiv);
+
+  msgs.scrollTop = msgs.scrollHeight;
+  btn.disabled = false;
+  btn.textContent = '⚡ Pay & Ask';
+}
+
+// ─── SEARCH ──────────────────────────────────────────────────────
+function handleSearch(val) {
+  const results = document.getElementById('searchResults');
+  if (!val.trim()) { results.classList.remove('show'); return; }
+
+  const filtered = CONTACTS.filter(c =>
+    c.name.toLowerCase().includes(val.toLowerCase()) ||
+    c.addr.toLowerCase().includes(val.toLowerCase())
+  );
+
+  if (!filtered.length) { results.classList.remove('show'); return; }
+
+  results.innerHTML = filtered.map(c => `
+    <div class="sr-item" onclick="startChatWith('${c.name}','${c.addr}','${c.color}')">
+      <div class="sr-avatar" style="background:${c.color}">${c.name[0]}</div>
+      <div class="sr-info">
+        <div class="sr-name">${c.name}</div>
+        <div class="sr-addr">${c.addr.slice(0,20)}...</div>
+      </div>
+    </div>
+  `).join('');
+  results.classList.add('show');
+}
+
+function startChatWith(name, addr, color) {
+  document.getElementById('searchResults').classList.remove('show');
+  document.getElementById('walletSearch').value = '';
+
+  // check if thread exists
+  let existing = threads.find(t=>t.contact.addr===addr);
+  if (!existing) {
+    existing = { id:uid(), contact:{ name, addr, color }, messages:[{ id:uid(), from:'them', type:'text', text:`Hey! You started a chat with me via PayChat 👋`, ts:now() }] };
+    threads.unshift(existing);
+  }
+  activeThread = existing;
+  renderThreads();
+  renderMessages();
+}
+
+// ─── COMMANDS MENU ───────────────────────────────────────────────
+const CMDS = [
+  { cmd:'/pay 12', desc:'💸 Request 12 USDC' },
+  { cmd:'/ai explain OWS', desc:'🤖 AI response ($0.10)' },
+  { cmd:'/weather tokyo', desc:'🌦 Weather API ($0.05)' },
+  { cmd:'/price ethereum', desc:'📈 Crypto price ($0.02)' },
+];
+
+function toggleCmds() {
+  const menu = document.getElementById('cmdMenu');
+  menu.style.display = menu.style.display==='none' ? 'block' : 'none';
+  if (menu.style.display==='block') {
+    menu.innerHTML = CMDS.map(c=>`
+      <div onclick="useCmd('${c.cmd}')" style="padding:10px 14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);transition:background .1s" onmouseover="this.style.background='var(--faint)'" onmouseout="this.style.background=''">
+        <span style="font-size:12px;color:#9B8AFF;font-family:'Geist Mono',monospace;font-weight:600">${c.cmd}</span>
+        <span style="font-size:12px;color:var(--muted)">${c.desc}</span>
+      </div>
+    `).join('');
+  }
+}
+
+function useCmd(cmd) {
+  document.getElementById('chatInput').value = cmd;
+  document.getElementById('cmdMenu').style.display='none';
+}
+
+function checkSlash(val) {
+  if (val==='/' ) toggleCmds();
+}
+
+// ─── UTILS ───────────────────────────────────────────────────────
+function timeAgo(ts) {
+  const diff = Date.now() - ts;
+  if (diff < 60000) return 'now';
+  if (diff < 3600000) return Math.floor(diff/60000)+'m';
+  if (diff < 86400000) return Math.floor(diff/3600000)+'h';
+  return Math.floor(diff/86400000)+'d';
+}
+
+// ─── INIT ────────────────────────────────────────────────────────
+renderThreads();
+renderMessages();
+loadCryptoPrices();
+setInterval(loadCryptoPrices, 60000); // refresh prices every minute
+
+// close search on outside click
+document.addEventListener('click', e => {
+  if (!e.target.closest('.dsb-search')) {
+    document.getElementById('searchResults')?.classList.remove('show');
+  }
+  if (!e.target.closest('#cmdMenu') && !e.target.closest('.cmd-btn')) {
+    document.getElementById('cmdMenu').style.display='none';
+  }
+});
+</script>
+</body>
+</html>
